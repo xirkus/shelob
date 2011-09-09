@@ -1,0 +1,73 @@
+10
+
+dir
+855
+svn+ssh://melllaguno@neo/QA/trunk/java/lib
+svn+ssh://melllaguno@neo/QA
+
+
+
+2011-03-25T16:29:55.765659Z
+787
+melllaguno
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+493b362b-8e25-4fc3-b75a-8302dc00c538
+
+ant-contrib
+dir
+
+xstream
+dir
+
+selenium-server
+dir
+
+jsr305
+dir
+
+webobjects
+dir
+
+jsch
+dir
+
+junit-addons
+dir
+
+selenium-java
+dir
+
+pathways
+dir
+
+http-components
+dir
+
+contracts-for-java
+dir
+
+guava
+dir
+
+jbehave
+dir
+
+mockito
+dir
+
+chrome-driver
+dir
+
