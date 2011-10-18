@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import shelob.core.browsers.Chrome;
@@ -52,6 +53,7 @@ public class ChromeTests {
 	@Test
 	public void baseChromeTest(){
 		
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY , "/Users/mllaguno/Downloads/chromedriver");
 		chrome = Chrome.getDriver();
 		assertThat(chrome, is(notNullValue()));
 		chrome.quit();
@@ -62,6 +64,7 @@ public class ChromeTests {
 	public void baseChromeGridTest(){
 		
 		try {
+			System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY , "/Users/mllaguno/Downloads/chromedriver");
 			chromeGrid = Chrome.getDriver(new URL("http://localhost"));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

@@ -40,7 +40,7 @@ import javax.annotation.concurrent.Immutable;
 public class ApplicationURL {
 
 	private static final Integer DEFAULT_HTTPS_PORT = 443;
-	private static final String SCHEME = "https://";
+	private static final String SCHEME = "http://";
 	
 	private final String hostname;
 	private final Integer port;

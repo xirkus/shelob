@@ -77,9 +77,9 @@ public class User implements IUser {
 	/**
 	 * Limited Scope Default Constructor
 	 * 
-	 * @param builder the User.Builder responsble for creating this object
+	 * @param builder the User.Builder responsible for creating this object
 	 */
-	private User(Builder builder) {
+	protected User(Builder builder) {
 		
 		checkNotNull(builder);
 		
@@ -91,7 +91,6 @@ public class User implements IUser {
 	/**
 	 * Method getEmail.
 	 * @return String
-	 * @see com.stratahealth.test.framework.core.interfaces.IUser#getEmail()
 	 */
 	public String getEmail() {
 		return email;
@@ -100,7 +99,6 @@ public class User implements IUser {
 	/**
 	 * Method getPassword.
 	 * @return String
-	 * @see com.stratahealth.test.framework.core.interfaces.IUser#getPassword()
 	 */
 	public String getPassword() {
 		return password;
