@@ -1,3 +1,15 @@
+# OSX index files
+#################
+.DS_Store
+
+# Subversion directories
+########################
+.svn
+
+# compiled binaries
+###################
+bin/
+
 # Compiled source #
 ###################
 *.com
