@@ -1,43 +1,0 @@
-10
-
-dir
-855
-svn+ssh://melllaguno@neo/QA/trunk/java/lib/junit-addons/api/junitx
-svn+ssh://melllaguno@neo/QA
-
-
-
-2011-03-25T16:29:55.765659Z
-787
-melllaguno
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-493b362b-8e25-4fc3-b75a-8302dc00c538
-
-extensions
-dir
-
-ant
-dir
-
-framework
-dir
-
-tool
-dir
-
-util
-dir
-
