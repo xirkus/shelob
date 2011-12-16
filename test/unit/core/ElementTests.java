@@ -45,12 +45,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import shelob.core.ApplicationParameters;
 import shelob.core.LookUp;
@@ -92,7 +89,7 @@ public class ElementTests {
 	@Mock RemoteWebDriver driver;
 	@Mock IPage link;
 	@Mock ApplicationParameters parameters;
-	@Mock Wait<WebDriver> waitMock;
+	@Mock RemoteWebDriver waitMock;
 	
 	private static final LookUp LOOKUP = LookUp.ByXpath;
 	private static final String LOCATOR = "/x/path/to/element";
@@ -1573,14 +1570,4 @@ public class ElementTests {
 		assertThat(imageWithLocalizations.isTemplate(), is(true));
 	}
 	
-	@Test
-	public void waitDelegateTest(){
-
-		IImage control = new Image.Builder(parentPage, Image.Type.Standard, "identifier").build();
-		
-		when(control.getWaitHelper(1000)).thenReturn(waitMock);
-		control.waitUntilVisible(1000);
-		verify((JavascriptExecutor)driver).executeScript("return true;");
-		
-	}
 }
