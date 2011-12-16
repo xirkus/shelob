@@ -26,8 +26,6 @@
 package shelob.core.elements;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.base.Strings.nullToEmpty;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +41,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -51,13 +50,13 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import shelob.core.LookUp;
+import shelob.core.exceptions.AutomationException;
 import shelob.core.exceptions.InsufficientArgumentsException;
 import shelob.core.exceptions.NonExistentWebElementException;
 import shelob.core.interfaces.IOpensNewWindow;
+import shelob.core.interfaces.IWaitDelegate;
 import shelob.core.interfaces.elements.IElement;
 import shelob.core.interfaces.page.IPage;
-
-
 
 /**
  * @author melllaguno
@@ -92,13 +91,7 @@ public abstract class Element implements IElement {
 	private int waitTimeInSeconds;
 	@GuardedBy("this")
 	private IElement parent_element;
-	@GuardedBy("this")
-	private String multiplesLocator;
 	
-	
-	@GuardedBy("this")
-	private WebElement element; // $codepro.audit.disable fieldAccessProtection
-
 	/**
 	 * NOTE : We lazy-initialize the internal WebElement on method access to
 	 * ensure that we can specify the expected page layout without have to
@@ -137,29 +130,20 @@ public abstract class Element implements IElement {
 	/**
 	 * @return WebElement the WebElement wrapped by this Element object
 	 */
-	synchronized public WebElement getElement() {
-		initializeWebElement();
-		return element;
+	public WebElement getWebElement() {
+		return getWebElementImpl();
 	}
 
-	/**
-	 * We resolve the element when it is first accessed - lazy initialization
-	 */
-	private void initializeWebElement() {
-
-		// WARNING : Initially, we tried caching the WebElement, but
-		// unfortunately
-		// the WebDriver's cache becomes invalid when a page is refreshed;
-		// hence, we need to resolve the WebElement FOR EACH REQUEST
-		element = getWebElement();
+	public List<WebElement> getWebElements() {
+		return getWebElementsImpl();
 	}
-
+	
 	/**
 	 * Finds the WebElement using the LookUp strategy and locator string
 	 * 
 	 * @return the WebElement resolved through WebDriver
 	 */
-	private WebElement getWebElement() {
+	private WebElement getWebElementImpl() {
 		
 		if (isTemplate && getTemplateIdentifiers().size() == 0)
 			throw new NonExistentWebElementException(
@@ -194,17 +178,60 @@ public abstract class Element implements IElement {
 
 		return new NonExistentElement(this);
 	}
+	
+	/**
+	 * Finds multiple WebElement objects using the LookUp string and locator string
+	 * 
+	 * @return the List of WebElements resolved through the WebDriver
+	 */
+	private List<WebElement> getWebElementsImpl() {
+		
+		if (isTemplate && getTemplateIdentifiers().size() == 0)
+			throw new NonExistentWebElementException(
+					"An identifier must be set using setTemplateIdentifier() for any element behaving as a template.");
 
+		try {
+
+			switch (lookup) {
+
+			case ByClassName:
+				return parent.getDriver().findElements(By.className(getLocator()));
+			case ByCSSSelector:
+				return parent.getDriver().findElements(By.cssSelector(getLocator()));
+			case ById:
+				return parent.getDriver().findElements(By.id(getLocator()));
+			case ByLinkText:
+				return parent.getDriver().findElements(By.linkText(getLocator()));
+			case ByName:
+				return parent.getDriver().findElements(By.name(getLocator()));
+			case ByPartialLinkText:
+				return parent.getDriver().findElements(By.partialLinkText(getLocator()));
+			case ByTagName:
+				return parent.getDriver().findElements(By.tagName(getLocator()));
+			case ByXpath:
+				return parent.getDriver().findElements(By.xpath(getLocator()));
+			}
+		} catch (WebDriverException e) {
+			throw new NonExistentWebElementException(e.getMessage() + this.toString());
+		}
+
+		return new ArrayList<WebElement>();
+	}
+	
 	/**
 	 * delegates clear method call
 	 * 
 	 * @return IElement fluent interface; this
 	 * @see org.openqa.selenium.WebElement#clear()
 	 */
-	synchronized public IElement clear() {
-		initializeWebElement();
-		element.clear();
-		return this;
+	public IElement clear() {
+				
+		try {
+			getWebElementImpl().clear();
+			return this;
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -213,23 +240,16 @@ public abstract class Element implements IElement {
 	 * @return IElement fluent interface; this
 	 * @see org.openqa.selenium.WebElement#click()
 	 */
-	synchronized public IElement click() {
-		initializeWebElement();
-		element.click();
-		return this;
+	public IElement click() {
+		
+		try {
+			getWebElementImpl().click();
+			return this;	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
-	/**
-	 * delegates findElement method call
-	 * 
-	 * @param arg0
-	 * @return WebElement 
-	 * @see org.openqa.selenium.WebElement#findElement(By)
-	 */
-	synchronized public WebElement findElement(By arg0) {
-		initializeWebElement();
-		return element.findElement(arg0);
-	}
 
 	/**
 	 * delegates findElements method call
@@ -238,9 +258,13 @@ public abstract class Element implements IElement {
 	 * @return List<WebElement> 
 	 * @see org.openqa.selenium.WebElement#findElements(By)
 	 */
-	synchronized public List<WebElement> findElements(By arg0) {
-		initializeWebElement();
-		return element.findElements(arg0);
+	public List<WebElement> findElements(By arg0) {
+		
+		try {
+			return getWebElementImpl().findElements(arg0);	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -250,9 +274,13 @@ public abstract class Element implements IElement {
 	 * @return String 
 	 * @see org.openqa.selenium.WebElement#getAttribute(String)
 	 */
-	synchronized public String getAttribute(String arg0) {
-		initializeWebElement();
-		return element.getAttribute(arg0);
+	public String getAttribute(String arg0) {
+		
+		try {
+			return getWebElementImpl().getAttribute(arg0);	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -261,9 +289,13 @@ public abstract class Element implements IElement {
 	 * @return String 
 	 * @see org.openqa.selenium.WebElement#getTagName()
 	 */
-	synchronized public String getTagName() {
-		initializeWebElement();
-		return element.getTagName();
+	public String getTagName() {
+		
+		try {
+			return getWebElementImpl().getTagName();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -272,9 +304,13 @@ public abstract class Element implements IElement {
 	 * @return String 
 	 * @see org.openqa.selenium.WebElement#getText()
 	 */
-	synchronized public String getText() {
-		initializeWebElement();
-		return element.getText();
+	public String getText() {
+		
+		try {
+			return getWebElementImpl().getText();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -283,16 +319,17 @@ public abstract class Element implements IElement {
 	 * @return boolean 
 	 * @see org.openqa.selenium.WebElement#isEnabled()
 	 */
-	synchronized public boolean isEnabled() {
-		initializeWebElement();
+	public boolean isEnabled() {
 		
 		try {
-			return element.isEnabled();	
+			return getWebElementImpl().isEnabled();	
 		} catch (NonExistentWebElementException e) {
 			return isValid();
 		} catch (ElementNotVisibleException e) {
 			return false;
-		}			
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -301,9 +338,13 @@ public abstract class Element implements IElement {
 	 * @return boolean 
 	 * @see org.openqa.selenium.WebElement#isSelected()
 	 */
-	synchronized public boolean isSelected() {
-		initializeWebElement();
-		return element.isSelected();
+	public boolean isSelected() {
+		
+		try {
+			return getWebElementImpl().isSelected();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -313,10 +354,14 @@ public abstract class Element implements IElement {
 	 * @return IElement fluent interface; this
 	 * @see org.openqa.selenium.WebElement#sendKeys(CharSequence[])
 	 */
-	synchronized public IElement sendKeys(CharSequence... arg0) {
-		initializeWebElement();
-		element.sendKeys(arg0);
-		return this;
+	public IElement sendKeys(CharSequence... arg0) {
+		
+		try {
+			getWebElementImpl().sendKeys(arg0);
+			return this;	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -325,9 +370,8 @@ public abstract class Element implements IElement {
 	 * @param arg0
 	 * @return IElement fluent interface; this
 	 */
-	public IElement type(CharSequence... arg0) {
-		this.sendKeys(arg0);
-		return this;
+	public IElement type(CharSequence... arg0) {		
+		return this.sendKeys(arg0);
 	}
 
 	/**
@@ -336,10 +380,14 @@ public abstract class Element implements IElement {
 	 * @return IElement fluent interface; this
 	 * @see org.openqa.selenium.WebElement#submit()
 	 */
-	synchronized public IElement submit() {
-		initializeWebElement();
-		element.submit();
-		return this;
+	public IElement submit() {
+		
+		try {
+			getWebElementImpl().submit();
+			return this;	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -347,11 +395,11 @@ public abstract class Element implements IElement {
 	 * 
 	 * @return boolean 
 	 */
-	synchronized public boolean isValid() {
-		initializeWebElement();
-		if (element instanceof NonExistentElement)
+	public boolean isValid() {
+		
+		if (getWebElementImpl() instanceof NonExistentElement)
 			return false;
-		return true;
+		return true;	
 	}
 
 	/**
@@ -377,8 +425,7 @@ public abstract class Element implements IElement {
 
 		if (isTemplate()) {
 			try {
-				compoundLocator.append(String.format(locator,
-						templateIdentifiers.toArray()));
+				compoundLocator.append(String.format(locator, templateIdentifiers.toArray()));
 			} catch (MissingFormatArgumentException e) {
 				throw new InsufficientArgumentsException(
 						String.format(
@@ -675,7 +722,12 @@ public abstract class Element implements IElement {
 	 */
 	public IElement waitUntilVisible(long waitTimeInSeconds) {
 		
-		initializeWebElement();
+		IWaitDelegate delegate = this.getParentPage().getParameters().getWaitDelegate();
+		
+		// We only want this to run once; the WebDriverWait polls afterwards.
+		if (delegate != null)
+			delegate.run();
+		
 		getWaitHelper(waitTimeInSeconds).until(elementIsVisible());	
 		return this;
 	}
@@ -717,9 +769,14 @@ public abstract class Element implements IElement {
 	 * @return IElement
 	 */
 	public IElement clearWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		clear();
-		return this;
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			clear();
+			return this;
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -734,28 +791,16 @@ public abstract class Element implements IElement {
 	 * @return IElement
 	 */
 	public IElement clickWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		click();
-		return this;
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			click();
+			return this;
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
-	/**
-	 * @param arg0
-	 * @return WebElement
-	 */
-	public WebElement findElementWhenVisible(By arg0) {
-		return findElementWhenVisible(arg0, getTimeout());
-	}
-
-	/**
-	 * @param arg0
-	 * @param waitTimeInSeconds
-	 * @return WebElement
-	 */
-	public WebElement findElementWhenVisible(By arg0, int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return findElement(arg0);
-	}
 
 	/**
 	 * @param arg0
@@ -772,8 +817,13 @@ public abstract class Element implements IElement {
 	 */
 	public List<WebElement> findElementsWhenVisible(By arg0,
 			int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return findElements(arg0);
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return findElements(arg0);	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -790,8 +840,13 @@ public abstract class Element implements IElement {
 	 * @return String
 	 */
 	public String getAttributeWhenVisible(String arg0, int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return getAttribute(arg0);
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getAttribute(arg0);	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -806,8 +861,13 @@ public abstract class Element implements IElement {
 	 * @return String
 	 */
 	public String getTagNameWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return getTagName();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getTagName();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -822,8 +882,13 @@ public abstract class Element implements IElement {
 	 * @return String
 	 */
 	public String getTextWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return getText();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getText();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -838,8 +903,13 @@ public abstract class Element implements IElement {
 	 * @return boolean
 	 */
 	public boolean isEnabledWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return isEnabled();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return isEnabled();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -854,8 +924,13 @@ public abstract class Element implements IElement {
 	 * @return boolean
 	 */
 	public boolean isSelectedWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		return isSelected();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return isSelected();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -873,9 +948,14 @@ public abstract class Element implements IElement {
 	 */
 	public IElement sendKeysWhenVisible(int waitTimeInSeconds,
 			CharSequence... arg0) {
-		waitUntilVisible(waitTimeInSeconds);
-		sendKeys(arg0);
-		return this;
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			sendKeys(arg0);
+			return this;	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	/**
@@ -907,55 +987,53 @@ public abstract class Element implements IElement {
 	 * @return IElement
 	 */
 	public IElement submitWhenVisible(int waitTimeInSeconds) {
-		waitUntilVisible(waitTimeInSeconds);
-		submit();
-		return this;
-	}
-
-	/**
-	 * @param locator
-	 * @return IElement
-	 */
-	public IElement setMultiplesLocator(String locator) {
-		multiplesLocator = locator;
-		return this;
-	}
-	
-	/**
-	 * @return String
-	 */
-	public String getMultiplesLocator() {
-		return nullToEmpty(multiplesLocator);
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			submit();
+			return this;	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	public boolean hasMultiples() {
-		return ! isNullOrEmpty(multiplesLocator);
+	synchronized public boolean isDisplayed(){
+		
+		try {
+			return getWebElementImpl().isDisplayed();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 	
-	/**
-	 * @return boolean
-	 */
-	public boolean isDisplayed(){
-		initializeWebElement();
-		return getElement().isDisplayed();
-	}
-	
-	public String getCssValue(String value) {
-		initializeWebElement();
-		return getElement().getCssValue(value);
+	synchronized public String getCssValue(String value) {
+		
+		try {
+			return getWebElementImpl().getCssValue(value);	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
-	public Point getLocation() {
-		initializeWebElement();
-		return getElement().getLocation();
+	synchronized public Point getLocation() {
+		
+		try {
+			return getWebElementImpl().getLocation();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
-	public Dimension getSize() {
-		initializeWebElement();
-		return getElement().getSize();
+	synchronized public Dimension getSize() {
+		
+		try {
+			return getWebElementImpl().getSize();	
+		} catch (WebDriverException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 
 	public boolean isDisplayedWhenVisible(){
@@ -963,8 +1041,13 @@ public abstract class Element implements IElement {
 	}
 	
 	public boolean isDisplayedWhenVisible(int waitTimeInSeconds){
-		waitUntilVisible(waitTimeInSeconds);
-		return isDisplayed();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return isDisplayed();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 	
 	public String getCssValueWhenVisible(String value) {
@@ -972,8 +1055,13 @@ public abstract class Element implements IElement {
 	}
 	
 	public String getCssValueWhenVisible(String value, int waitTimeInSeconds){
-		waitUntilVisible(waitTimeInSeconds);
-		return getCssValue(value);
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getCssValue(value);	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}	
 	}
 	
 	public Point getLocationWhenVisible(){
@@ -981,8 +1069,13 @@ public abstract class Element implements IElement {
 	}
 	
 	public Point getLocationWhenVisible(int waitTimeInSeconds){
-		waitUntilVisible(waitTimeInSeconds);
-		return getLocation();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getLocation();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 	
 	public Dimension getSizeWhenVisible(){
@@ -990,8 +1083,13 @@ public abstract class Element implements IElement {
 	}
 	
 	public Dimension getSizeWhenVisible(int waitTimeInSeconds){
-		waitUntilVisible(waitTimeInSeconds);
-		return getSize();
+		
+		try {
+			waitUntilVisible(waitTimeInSeconds);
+			return getSize();	
+		} catch (TimeoutException e){
+			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+		}
 	}
 	
 	/*
@@ -1003,9 +1101,9 @@ public abstract class Element implements IElement {
 		return new ExpectedCondition<WebElement>() {
 
 			public WebElement apply(WebDriver driver) {
-
-				final WebElement e = getElement();
-
+				
+				final WebElement e = getWebElementImpl();
+				
 				if (e instanceof NonExistentElement)
 					return null;
 

@@ -23,13 +23,8 @@
 
 package shelob.core.interfaces.webdriver;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
-
 import shelob.core.interfaces.elements.IElement;
 
 
@@ -51,23 +46,7 @@ public interface IWebElementFluent {
 	 * @return IElement fluent interface; this - void return method on WebElement
 	 */
 	IElement click();
-	
-	/**
-	 * unmodified method signature from WebElement
-	 * 
-	 * @param arg0
-	 * @return WebElement
-	 */
-	WebElement findElement(By arg0);
-
-	/**
-	 * unmodified method signature from WebElement
-	 * 
-	 * @param arg0
-	 * @return List<WebElement>
-	 */
-	List<WebElement> findElements(By arg0);
-	
+		
 	/**
 	 * unmodified method signature from WebElement
 	 * 

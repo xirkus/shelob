@@ -36,8 +36,6 @@ import shelob.core.exceptions.NonExistentWebElementException;
 import shelob.core.interfaces.elements.IElement;
 import shelob.core.interfaces.elements.IElementCollection;
 
-
-
 /**
  * @author melllaguno
  * @version $Revision: 1.0 $
@@ -146,7 +144,7 @@ public class ElementCollection implements IElementCollection {
 			return (T) element;
 		}
 		
-		throw new NonExistentWebElementException("The ElementColleciton does not contains an associated IElment with the label : " + identifiers);
+		throw new NonExistentWebElementException("The ElementColleciton does not contains an associated IElement with the label : " + identifiers);
 	}
 
 	public <T extends IElement> T find(Class<T> type, String label) throws NonExistentWebElementException { // $codepro.audit.disable overloadedMethods
@@ -181,7 +179,7 @@ public class ElementCollection implements IElementCollection {
 			return type.cast(element);
 		}
 		
-		throw new NonExistentWebElementException("The ElementColleciton does not contains an associated IElment with the label : " + identifiers);
+		throw new NonExistentWebElementException("The ElementColleciton does not contains an associated IElement with the label : " + identifiers);
 	}
 	
 	private void setLocalization(String label, IElement element) {

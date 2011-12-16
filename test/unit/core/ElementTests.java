@@ -42,11 +42,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import shelob.core.ApplicationParameters;
 import shelob.core.LookUp;
@@ -54,6 +58,7 @@ import shelob.core.elements.Element;
 import shelob.core.elements.NonExistentElement;
 import shelob.core.exceptions.InsufficientArgumentsException;
 import shelob.core.exceptions.NonExistentWebElementException;
+import shelob.core.interfaces.IWaitDelegate;
 import shelob.core.interfaces.elements.IElement;
 import shelob.core.interfaces.elements.IElementCollection;
 import shelob.core.interfaces.page.IPage;
@@ -87,6 +92,7 @@ public class ElementTests {
 	@Mock RemoteWebDriver driver;
 	@Mock IPage link;
 	@Mock ApplicationParameters parameters;
+	@Mock Wait<WebDriver> waitMock;
 	
 	private static final LookUp LOOKUP = LookUp.ByXpath;
 	private static final String LOCATOR = "/x/path/to/element";
@@ -147,12 +153,19 @@ public class ElementTests {
 		element = new TestElement(parentPage, LOOKUP, LOCATOR, link, LABEL);
 		parentElement = new ParentElement(parentPage, LOOKUP, PARENT_LOCATOR, link, LABEL);
 		nullObject = new NonExistentElement(element);
-		
+				
 		// Configure behavior for delegate tests
 		when(parentPage.getPageTitle()).thenReturn(PAGE_NAME);
 		when(parentPage.getDriver()).thenReturn(driver);
 		when(parentPage.getParameters()).thenReturn(parameters);
+		
 		when(parameters.getDefaultWait()).thenReturn(0);
+		when(parameters.getWaitDelegate()).thenReturn(new IWaitDelegate(){
+
+			public void run() {
+				((JavascriptExecutor)driver).executeScript("return true;");
+			}
+		});
 		
 		when(linkPage.getDriver()).thenReturn(driver);
 		
@@ -198,12 +211,7 @@ public class ElementTests {
 		assertThat(element.hasLocalizations(), is(true));
 		element.addLocalization("Localization 2");
 		assertThat(element.getLocalizations().size(), is(3)); //includes original label
-		
-		assertThat(element.hasMultiples(), is(false));
-		element.setMultiplesLocator("//multiples");
-		assertThat(element.hasMultiples(), is(true));
-		assertThat(element.getMultiplesLocator(), is("//multiples"));
-		
+				
 		// Ensure immutability of Localizations
 		final String invalid = "Invalid Localization";
 		Collection<String> returnLocalizations = element.getLocalizations();
@@ -291,7 +299,7 @@ public class ElementTests {
 	public void nonExistentElementTests(){
 		assertThat(nullObject.isValid(), is(false));
 	}
-	
+		
 	@Test(expected = NonExistentWebElementException.class)
 	public void clearNonExistentElement(){
 		nullObject.clear();
@@ -445,8 +453,13 @@ public class ElementTests {
 	}
 	
 	@Test(expected = NonExistentWebElementException.class)
-	public void getElementNonExistentElement(){
-		nullObject.getElement();
+	public void getWebElementNonExistentElement(){
+		nullObject.getWebElement();
+	}
+
+	@Test(expected = NonExistentWebElementException.class)
+	public void getWebElementsNonExistentElement(){
+		nullObject.getWebElements();
 	}
 	
 	@Test(expected = NonExistentWebElementException.class)
@@ -493,17 +506,7 @@ public class ElementTests {
 	public void clickWhenVisibleWithWaitNonExistentElement(){
 		nullObject.clickWhenVisible(5);
 	}
-	
-	@Test(expected = NonExistentWebElementException.class)
-	public void findElementWhenVisibleNonExistentElement(){
-		nullObject.findElementWhenVisible(By.id(""));
-	}
-	
-	@Test(expected = NonExistentWebElementException.class)
-	public void findElementWhenVisibleWithWaitNonExistentElement(){
-		nullObject.findElementWhenVisible(By.id(""), 5);
-	}
-	
+		
 	@Test(expected = NonExistentWebElementException.class)
 	public void findElementsWhenVisibleNonExistentElement(){
 		nullObject.findElementsWhenVisible(By.id(""));
@@ -588,22 +591,7 @@ public class ElementTests {
 	public void setTemplateIdentifiersNonExistentElement(){
 		nullObject.setTemplateIdentifiers("one", "two", "three");
 	}
-	
-	@Test(expected = NonExistentWebElementException.class)
-	public void setMultiplesLocatorNonExistentElement(){
-		nullObject.setMultiplesLocator("");
-	}
-	
-	@Test(expected = NonExistentWebElementException.class)
-	public void getMultiplesLocatorNonExistentElement(){
-		nullObject.getMultiplesLocator();
-	}
-	
-	@Test(expected = NonExistentWebElementException.class)
-	public void hasMultiplesNonExistentElement(){
-		nullObject.hasMultiples();
-	}
-	
+		
 	@Test(expected = NonExistentWebElementException.class)
 	public void typeWhenVisibleNonExistentElement(){
 		nullObject.typeWhenVisible("");
@@ -672,13 +660,7 @@ public class ElementTests {
 		
 		element.click();
 		verify(delegate).click();
-		
-		element.findElement(By.xpath(LOCATOR));
-		verify(delegate).findElement(By.xpath(LOCATOR));
-		
-		element.findElements(By.xpath(LOCATOR));
-		verify(delegate).findElements(By.xpath(LOCATOR));
-		
+						
 		element.getAttribute("");
 		verify(delegate).getAttribute("");
 		
@@ -835,19 +817,6 @@ public class ElementTests {
 		assertThat(anyElementActingAsATemplate.isTemplate(), is(true));
 		
 		anyElementActingAsATemplate.click();
-	}
-	
-	@Test
-	public void createElementWithHasMultiplesLocator(){
-		
-		ApplicationParameters parameters = mock(ApplicationParameters.class);
-		TestPage page = new TestPage(parameters);
-		
-		final ICheckBox anyElementWithMultiplesLocator = new CheckBox.Builder(page, LookUp.ByXpath, "/xpath/template/with[@expression='%s']")
-																	 .hasMultiples("//multiples/locator")
-																	 .build();
-		
-		assertThat(anyElementWithMultiplesLocator.getMultiplesLocator(), is("//multiples/locator"));
 	}
 	
 	@Test
@@ -1400,7 +1369,7 @@ public class ElementTests {
 	    								.linksTo(linkPage)
 	    								.build();
 		
-		when(control.getElement()).thenReturn(rendered);
+		when(control.getWebElement()).thenReturn(rendered);
 		
 		try {
 			control.waitUntilVisible(2);
@@ -1419,12 +1388,11 @@ public class ElementTests {
 	    								.defaultWaitInterval(2)
 	    								.build();
 		
-		when(control.getElement()).thenReturn(rendered);
+		when(control.getWebElement()).thenReturn(rendered);
 		when(rendered.isDisplayed()).thenReturn(true);
 		
 		control.clearWhenVisible();
 		control.clickWhenVisible();
-		control.findElementWhenVisible(By.id(""));
 		control.findElementsWhenVisible(By.id(""));
 		control.getAttributeWhenVisible("");
 		control.getTagNameWhenVisible();
@@ -1461,7 +1429,7 @@ public class ElementTests {
 									    .defaultWaitInterval(3)
 									    .build();
 		
-		when(control.getElement()).thenReturn(element);
+		when(control.getWebElement()).thenReturn(element);
 		when(element.getTagName()).thenReturn("select");
 		when(element.isDisplayed()).thenReturn(true);
 		when(element.findElements(By.xpath(anyString()))).thenReturn(list);
@@ -1603,5 +1571,16 @@ public class ElementTests {
 		assertThat(imageWithLocalizations.getLocalizations().contains("Localization 1"), is(true));
 		assertThat(imageWithLocalizations.getLocalizations().contains("Localization 2"), is(true));
 		assertThat(imageWithLocalizations.isTemplate(), is(true));
+	}
+	
+	@Test
+	public void waitDelegateTest(){
+
+		IImage control = new Image.Builder(parentPage, Image.Type.Standard, "identifier").build();
+		
+		when(control.getWaitHelper(1000)).thenReturn(waitMock);
+		control.waitUntilVisible(1000);
+		verify((JavascriptExecutor)driver).executeScript("return true;");
+		
 	}
 }

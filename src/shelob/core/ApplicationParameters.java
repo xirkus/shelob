@@ -31,6 +31,8 @@ import javax.annotation.concurrent.Immutable;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import shelob.core.interfaces.IWaitDelegate;
+
 /**
  * @author melllaguno
  * @version $Revision: 1.0 $
@@ -46,6 +48,7 @@ public class ApplicationParameters {
 	
 	// Optional Global settings
 	private volatile int defaultWaitInSeconds = 0;
+	private volatile IWaitDelegate delegate;
 	
 	/**
 	 * ApplicationParameter Constructor
@@ -58,6 +61,8 @@ public class ApplicationParameters {
 		this.driver = checkNotNull(driver);
 		this.url = checkNotNull(url);
 		this.user = checkNotNull(user);
+		
+		delegate = null;
 	}
 	
 	/**
@@ -95,6 +100,15 @@ public class ApplicationParameters {
 	 */
 	public int getDefaultWait() {
 		return defaultWaitInSeconds;
+	}
+	
+	public IWaitDelegate getWaitDelegate() {
+		return delegate;
+	}
+	
+	public ApplicationParameters setWaitDelegate(IWaitDelegate delegate) {
+		this.delegate = delegate;
+		return this;
 	}
 	
 	/**

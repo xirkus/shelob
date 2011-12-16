@@ -24,6 +24,7 @@
 package shelob.core.interfaces.elements;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
@@ -41,9 +42,14 @@ import shelob.core.interfaces.webdriver.IWaitable;
 public interface IElementCore extends IWaitable {
 
 	/**
-	 * @return returns underlying WebElement; needed for Select WebDriver objects
+	 * @return WebElement returns underlying WebElement; needed for Select WebDriver objects
 	 */
-	WebElement getElement();
+	WebElement getWebElement();
+	
+	/**
+	 * @return List<WebElement> returns list of WebElements; need for finding multiples of objects
+	 */
+	List<WebElement> getWebElements();
 	
 	/**
 	 * Convenience method for sendKeys() - which is not that intuitive
@@ -194,21 +200,4 @@ public interface IElementCore extends IWaitable {
 	 */
 	IElement waitUntilVisible(long waitTimeInSeconds);
 	
-	/**
-	 * Sets the multiples locator for the element
-	 * 
-	 * @param locator the locator string
-	 * @return IElement fluent interface; this
-	 */
-	IElement setMultiplesLocator(String locator);
-	
-	/**
-	 * @return the multiples locator
-	 */
-	String getMultiplesLocator();
-	
-	/**
-	 * @return boolean A flag which indicates whether this element has multiples 
-	 */
-	boolean hasMultiples();
 }

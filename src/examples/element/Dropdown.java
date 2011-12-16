@@ -134,7 +134,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#isMultiple()
 	 */
 	public boolean isMultiple() {
-		return getSelection(getElement()).isMultiple();
+		return getSelection(getWebElement()).isMultiple();
 	}
 
 	/**
@@ -143,7 +143,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#getOptions()
 	 */
 	public List<WebElement> getOptions() {
-		return getSelection(getElement()).getOptions();
+		return getSelection(getWebElement()).getOptions();
 	}
 
 	/**
@@ -152,7 +152,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#getAllSelectedOptions()
 	 */
 	public List<WebElement> getAllSelectedOptions() {
-		return getSelection(getElement()).getAllSelectedOptions();
+		return getSelection(getWebElement()).getAllSelectedOptions();
 	}
 
 	/**
@@ -161,7 +161,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#getFirstSelectedOption()
 	 */
 	public WebElement getFirstSelectedOption() {
-		return getSelection(getElement()).getFirstSelectedOption();
+		return getSelection(getWebElement()).getFirstSelectedOption();
 	}
 
 	/**
@@ -171,7 +171,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#selectByVisibleText(String)
 	 */
 	public IDropdown selectByVisibleText(String text) {
-		getSelection(getElement()).selectByVisibleText(text);
+		getSelection(getWebElement()).selectByVisibleText(text);
 		return this;
 	}
 
@@ -182,7 +182,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#selectByIndex(int)
 	 */
 	public IDropdown selectByIndex(int index) {
-		getSelection(getElement()).selectByIndex(index);
+		getSelection(getWebElement()).selectByIndex(index);
 		return this;
 	}
 
@@ -193,7 +193,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#selectByValue(String)
 	 */
 	public IDropdown selectByValue(String value) {
-		getSelection(getElement()).selectByValue(value);
+		getSelection(getWebElement()).selectByValue(value);
 		return this;
 	}
 
@@ -203,7 +203,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#deselectAll()
 	 */
 	public IDropdown deselectAll() {
-		getSelection(getElement()).deselectAll();
+		getSelection(getWebElement()).deselectAll();
 		return this;
 	}
 
@@ -214,7 +214,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#deselectByValue(String)
 	 */
 	public IDropdown deselectByValue(String value) {
-		getSelection(getElement()).deselectByValue(value);
+		getSelection(getWebElement()).deselectByValue(value);
 		return this;
 	}
 
@@ -225,7 +225,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#deselectByIndex(int)
 	 */
 	public IDropdown deselectByIndex(int index) {
-		getSelection(getElement()).deselectByIndex(index);
+		getSelection(getWebElement()).deselectByIndex(index);
 		return this;
 	}
 
@@ -236,7 +236,7 @@ public final class Dropdown extends Element implements IDropdown { // $codepro.a
 	 * @see com.stratahealth.test.framework.core.interfaces.webdriver.ISelect#deselectByVisibleText(String)
 	 */
 	public IDropdown deselectByVisibleText(String text) {
-		getSelection(getElement()).deselectByVisibleText(text);
+		getSelection(getWebElement()).deselectByVisibleText(text);
 		return this;
 	}
 	

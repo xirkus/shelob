@@ -357,8 +357,12 @@ public final class NonExistentElement implements WebElement, IElementCore, IWhen
 	 * Method getElement
 	 * @return  WebElement
 	 */
-	public WebElement getElement() {
+	public WebElement getWebElement() {
 		throw new NonExistentWebElementException("Attempt to call getElement() on a WebElement that cannot be found." + caller.toString());
+	}
+	
+	public List<WebElement> getWebElements() {
+		throw new NonExistentWebElementException("Attempt to call getElements() on a WebElement that cannot be found." + caller.toString());
 	}
 	
 	/**
@@ -437,25 +441,6 @@ public final class NonExistentElement implements WebElement, IElementCore, IWhen
 	 */
 	public IElement clickWhenVisible(int waitTimeInSeconds) {
 		throw new NonExistentWebElementException("Attempt to call clickWhenVisible() on a WebElement that cannot be found." + caller.toString());
-	}
-
-	/**
-	 * Method findElementWhenVisible
-	 * @param arg0
-	 * @return WebElement
-	 */
-	public WebElement findElementWhenVisible(By arg0) {
-		throw new NonExistentWebElementException("Attempt to call findElementWhenVisible() on a WebElement that cannot be found." + caller.toString());
-	}
-
-	/**
-	 * Method findElementWhenVisible
-	 * @param arg0
-	 * @param waitTimeInSeconds
-	 * @return WebElement
-	 */
-	public WebElement findElementWhenVisible(By arg0, int waitTimeInSeconds) {
-		throw new NonExistentWebElementException("Attempt to call findElementWhenVisible() on a WebElement that cannot be found." + caller.toString());
 	}
 
 	/**
@@ -607,31 +592,6 @@ public final class NonExistentElement implements WebElement, IElementCore, IWhen
 	 */
 	public IElement setTemplateIdentifiers(String... identifiers) {
 		throw new NonExistentWebElementException("Attempt to call setTemplateIdentifiers() on a WebElement that cannot be found." + caller.toString());
-	}
-
-	/**
-	 * Method setMultiplesLocator
-	 * @param locator
-	 * @return IElement
-	 */
-	public IElement setMultiplesLocator(String locator) {
-		throw new NonExistentWebElementException("Attempt to call setMultiplesLocator() on a WebElement that cannot be found." + caller.toString());
-	}
-
-	/**
-	 * Method getMultiplesLocator
-	 * @return String
-	 */
-	public String getMultiplesLocator() {
-		throw new NonExistentWebElementException("Attempt to call getMultiplesLocator() on a WebElement that cannot be found." + caller.toString());
-	}
-
-	/**
-	 * Method hasMultiples
-	 * @return boolean
-	 */
-	public boolean hasMultiples() {
-		throw new NonExistentWebElementException("Attempt to call hasMultiples() on a WebElement that cannot be found." + caller.toString());
 	}
 
 	/**

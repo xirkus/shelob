@@ -26,11 +26,13 @@
 package unit.core;
 
 import org.junit.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import shelob.core.ApplicationParameters;
 import shelob.core.ApplicationURL;
 import shelob.core.User;
+import shelob.core.interfaces.IWaitDelegate;
 
 
 import static org.hamcrest.CoreMatchers.*;
@@ -60,6 +62,9 @@ public class ApplicationParameterTests {
 		url = new ApplicationURL(appHostName, appEnvironment, appURL);
 		
 		user = new User.Builder(email, password).build();
+		
+		parameters = new ApplicationParameters(driver, url, user);
+		parameters.setDefaultWait(5);
 	}
 	
 	@After
@@ -68,13 +73,34 @@ public class ApplicationParameterTests {
 	@Test
 	public void baseApplicationParametersTests(){
 		
-		parameters = new ApplicationParameters(driver, url, user);
-		parameters.setDefaultWait(5);
-		
 		assertThat(parameters.getDriver(), is(driver));
 		assertThat(parameters.getURL(), is(url));
 		assertThat(parameters.getUser(), is(user));
 		assertThat(parameters.toString(), is(user.toString() + System.getProperty("line.separator") + url.toString()));
 		assertThat(parameters.getDefaultWait(), is(5));
+		assertNull(parameters.getWaitDelegate());
+	}
+	
+	@Test
+	public void waitDelegateTests(){
+		
+		// The WaitDelegate should be used to wire client side wait logic in with tests. For example,
+		// applications which display a spinner or some other visual device to prevent input or notify 
+		// the user of a running operation can call javascript to attempt to evaluate when the test
+		// should continue.
+		
+		parameters.setWaitDelegate(new IWaitDelegate(){
+
+			public void run() {
+				
+				// Scripts can return values as well, which can be used for post-processing logic
+				//String returnValue = (String) ((JavascriptExecutor)driver).executeScript("return true;");
+				
+				((JavascriptExecutor)driver).executeScript("return true;");
+			}
+		});
+		
+		parameters.getWaitDelegate().run();
+		verify((JavascriptExecutor)driver).executeScript("return true;");	
 	}
 }

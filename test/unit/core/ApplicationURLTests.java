@@ -51,7 +51,7 @@ public class ApplicationURLTests {
 		assertThat(app.getEnvironmentPrefix(), is(appEnvironment));
 		assertThat(app.getHostname(), is(appHostName));
 		assertThat(app.getPort(), is(8443));
-		assertThat(app.getURL(), is("https://" + appHostName + ":" + appPort + "/" + appEnvironment + "/" + appURL ));
+		assertThat(app.getURL(), is("http://" + appHostName + ":" + appPort + "/" + appEnvironment + "/" + appURL ));
 		assertThat(app.toString(), is("Application URL : " + app.getURL()));
 	}
 	
@@ -61,7 +61,7 @@ public class ApplicationURLTests {
 		final ApplicationURL defaultPort = new ApplicationURL(appHostName, appEnvironment, appURL);
 		
 		assertThat(defaultPort.getPort(), is(443));
-		assertThat(defaultPort.getURL(), is("https://" + appHostName + "/" + appEnvironment + "/" + appURL));
+		assertThat(defaultPort.getURL(), is("http://" + appHostName + "/" + appEnvironment + "/" + appURL));
 	}
 	
 }

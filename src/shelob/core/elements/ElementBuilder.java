@@ -127,16 +127,6 @@ public abstract class ElementBuilder<T> {
 	}
 	
 	/**
-	 * @param locator
-	 * @return this; fluent interface
-	 */
-	@SuppressWarnings("unchecked")
-	public T hasMultiples(String locator){
-		multiplesLocator = locator;
-		return (T) this; 
-	}
-	
-	/**
 	 * @return String friendly string representation of this object
 	 */
 	@Override
@@ -161,10 +151,7 @@ public abstract class ElementBuilder<T> {
     	
     	if (isRequired)
     		control.setRequired();
-    	
-    	if (multiplesLocator != null)
-    		control.setMultiplesLocator(multiplesLocator);
-    	
+    	    	
     	setWaitTimeOut(control);
 	}
 

@@ -71,20 +71,7 @@ public interface IWhenVisible {
 	 * @return IElement fluent interface;  this
 	 */
 	IElement clickWhenVisible(int waitTimeInSeconds);
-	
-	/**
-	 * @param arg0
-	 * @return WebElement
-	 */
-	WebElement findElementWhenVisible(By arg0);
-	
-	/**
-	 * @param arg0
-	 * @param waitTimeInSeconds
-	 * @return WebElement
-	 */
-	WebElement findElementWhenVisible(By arg0, int waitTimeInSeconds);
-	
+		
 	/**
 	 * @param arg0
 	 * @return List<WebElement>
