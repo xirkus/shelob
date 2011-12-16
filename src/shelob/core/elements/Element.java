@@ -246,7 +246,7 @@ public abstract class Element implements IElement {
 			getWebElementImpl().click();
 			return this;	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -263,7 +263,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().findElements(arg0);	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -279,7 +279,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getAttribute(arg0);	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -294,7 +294,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getTagName();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -309,7 +309,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getText();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -328,7 +328,7 @@ public abstract class Element implements IElement {
 		} catch (ElementNotVisibleException e) {
 			return false;
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -343,7 +343,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().isSelected();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -360,7 +360,7 @@ public abstract class Element implements IElement {
 			getWebElementImpl().sendKeys(arg0);
 			return this;	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -386,7 +386,7 @@ public abstract class Element implements IElement {
 			getWebElementImpl().submit();
 			return this;	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -775,7 +775,7 @@ public abstract class Element implements IElement {
 			clear();
 			return this;
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -797,7 +797,7 @@ public abstract class Element implements IElement {
 			click();
 			return this;
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -822,7 +822,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return findElements(arg0);	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -845,7 +845,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getAttribute(arg0);	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -866,7 +866,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getTagName();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -887,7 +887,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getText();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -908,7 +908,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return isEnabled();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -929,7 +929,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return isSelected();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -954,7 +954,7 @@ public abstract class Element implements IElement {
 			sendKeys(arg0);
 			return this;	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -993,7 +993,7 @@ public abstract class Element implements IElement {
 			submit();
 			return this;	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1005,7 +1005,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().isDisplayed();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1014,7 +1014,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getCssValue(value);	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -1023,7 +1023,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getLocation();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -1032,7 +1032,7 @@ public abstract class Element implements IElement {
 		try {
 			return getWebElementImpl().getSize();	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 
@@ -1046,7 +1046,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return isDisplayed();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1060,7 +1060,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getCssValue(value);	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}	
 	}
 	
@@ -1074,7 +1074,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getLocation();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1088,7 +1088,7 @@ public abstract class Element implements IElement {
 			waitUntilVisible(waitTimeInSeconds);
 			return getSize();	
 		} catch (TimeoutException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> ? : ?", this.toString(), e.getMessage()));
+			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
 	
