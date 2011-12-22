@@ -41,6 +41,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -554,15 +555,15 @@ public abstract class Element implements IElement {
 	@Override
 	public String toString() {
 
-		final StringBuilder s = new StringBuilder().append("Parent Page : ")
-				.append(parent.getPageTitle()).append(" Element : ")
-				.append(this.getClass().getName()).append(" LookUp : ")
-				.append(lookup.name()).append(" Locator : ")
-				.append(this.getLocator()).append(" HasLocalizations : ")
-				.append(this.hasLocalizations()).append(" HasLabel : ")
-				.append(this.hasLabel()).append(" IsRelativeToParent : ")
-				.append(this.isRelativeToParent()).append(" IsTemplate : ")
-				.append(isTemplate);
+		final StringBuilder s = new StringBuilder()
+								.append("Parent Page : ").append(parent.getClass().getCanonicalName())
+								.append(" Element : ").append(this.getClass().getName())
+								.append(" LookUp : ").append(lookup.name())
+								.append(" Locator : ").append(this.getLocator())
+								.append(" HasLocalizations : ").append(this.hasLocalizations())
+								.append(" HasLabel : ").append(this.hasLabel())
+								.append(" IsRelativeToParent : ").append(this.isRelativeToParent())
+								.append(" IsTemplate : ").append(isTemplate);
 
 		return s.toString();
 	}
@@ -721,14 +722,8 @@ public abstract class Element implements IElement {
 	 * @return IElement fluent interface; this
 	 */
 	public IElement waitUntilVisible(long waitTimeInSeconds) {
-		
-		IWaitDelegate delegate = this.getParentPage().getParameters().getWaitDelegate();
-		
-		// We only want this to run once; the WebDriverWait polls afterwards.
-		if (delegate != null)
-			delegate.run();
-		
-		getWaitHelper(waitTimeInSeconds).until(elementIsVisible());	
+				
+		getWaitHelper(waitTimeInSeconds).until(elementIsVisible(this.getParentPage().getParameters().getWaitDelegate()));	
 		return this;
 	}
 
@@ -1095,24 +1090,32 @@ public abstract class Element implements IElement {
 	/*
 	 * CONDITIONS
 	 */
-	private ExpectedCondition<WebElement> elementIsVisible() { // $codepro.audit.disable
+	private ExpectedCondition<WebElement> elementIsVisible(final IWaitDelegate delegate) { // $codepro.audit.disable
 																// methodJavadoc
 
-		return new ExpectedCondition<WebElement>() {
+			return new ExpectedCondition<WebElement>() {
 
-			public WebElement apply(WebDriver driver) {
-				
-				final WebElement e = getWebElementImpl();
-				
-				if (e instanceof NonExistentElement)
+				public WebElement apply(WebDriver driver) {
+					
+					final WebElement e = getWebElementImpl();
+					
+					if (delegate != null)
+						delegate.run();
+					
+					if (e instanceof NonExistentElement)
+						return null;
+
+					try {
+						if (e.isDisplayed())
+							return e;
+					} catch (StaleElementReferenceException exception) {
+						// Probably want to log when this happens
+						elementIsVisible(delegate);
+					}
+
 					return null;
-
-				if (e.isDisplayed())
-					return e;
-
-				return null;
-			}
-		};
+				}
+			};
 	}
 
 }
