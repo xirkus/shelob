@@ -66,6 +66,7 @@ In these cases where object disambiguation is relative to its context, the Xpath
 ==== The Swiss Army Knife of Strategies - By Xpath ====
 
 Every other lookup strategy can be encoded using Xpath; in this sense, Xpath is the most expressive. This ability however comes with at the cost of performance. In addition, changes to the DOM can directly affect Xpath expressions. Ideally, Xpath object resolution is used as a last resort when other strategies are inadequate to locate an object within the DOM or when it is useful to create a single expression to resolve similar objects of a given pattern using an expression template. In this sense, Xpath is the regex of the DOM.
+
 Xpath expressions become more important when constructing composite Elements. The ability to construct parent/child relationships allows individual component expressions to be resolved relative to another Element.
 
 ==== The Alternatives ====
@@ -73,6 +74,7 @@ The governing principle in object identification is uniqueness. If the other loo
 
 === Pages ===
 Pages serve as dictionaries for Elements that are associated with it's context. Configuration consists of specify Elements and their dictionary keys. Since each Page encapsulates its context, the same Element key can be used in different contexts. For example, the "Add" button in one context may illicit a different response in another context. As part of specifying Elements, Page objects are also responsible for wiring triggering Elements to navigational or Page transitions. An Element associated with a transition can have a navigational method invoked upon it and return and instance of the new Page context. Through this mechanism, an application graph can be constructed. The relationship between different Pages is not directly between Page object themselves, but through the intermediary Elements which can invoke transitions. This allows transitions away from the current Page context to be expressed as well as transitions that affect a sub-context within a Page.
+
 By using namespace to structure Page hierarchies, we can accomodate Page objects with duplicate names but with different functional contexts. This also allows shared components to be reused throughout the application.
 
 ==== Re-editable and Reusable ====
