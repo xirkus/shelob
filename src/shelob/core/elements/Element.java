@@ -73,6 +73,8 @@ import shelob.core.interfaces.page.IPage;
  */
 public abstract class Element implements IElement {
 
+	private static final int RETRY_MAX = 10;
+	
 	private final IPage parent;
 	private final String locator;
 	private final LookUp lookup;
@@ -92,6 +94,9 @@ public abstract class Element implements IElement {
 	private int waitTimeInSeconds;
 	@GuardedBy("this")
 	private IElement parent_element;
+	@GuardedBy("this")
+	private int retryCount;
+	
 	
 	/**
 	 * NOTE : We lazy-initialize the internal WebElement on method access to
@@ -126,6 +131,8 @@ public abstract class Element implements IElement {
 
 		localizations = new ArrayList<String>();
 		templateIdentifiers = new ArrayList<String>();
+		
+		retryCount = 0;
 	}
 
 	/**
@@ -230,7 +237,7 @@ public abstract class Element implements IElement {
 		try {
 			getWebElementImpl().clear();
 			return this;
-		} catch (WebDriverException e){
+		} catch (WebDriverException e){			
 			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
 		}
 	}
@@ -247,7 +254,16 @@ public abstract class Element implements IElement {
 			getWebElementImpl().click();
 			return this;	
 		} catch (WebDriverException e){
-			throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
+			
+			if (e.getMessage().contains("Element is not clickable at point") && retryCount < RETRY_MAX)
+			{
+				retryCount++;
+				click();
+			}
+			else
+				throw new AutomationException(String.format("Automation Exception thrown for -> %s : %s", this.toString(), e.getMessage()));
+			
+			return null;
 		}
 	}
 
@@ -1092,22 +1108,23 @@ public abstract class Element implements IElement {
 	 */
 	private ExpectedCondition<WebElement> elementIsVisible(final IWaitDelegate delegate) { // $codepro.audit.disable
 																// methodJavadoc
-
 			return new ExpectedCondition<WebElement>() {
 
 				public WebElement apply(WebDriver driver) {
 					
-					final WebElement e = getWebElementImpl();
-					
-					if (delegate != null)
-						delegate.run();
-					
-					if (e instanceof NonExistentElement)
-						return null;
-
 					try {
+						
+						final WebElement e = getWebElementImpl();
+						
+						if (delegate != null)
+							delegate.run();
+						
+						if (e instanceof NonExistentElement)
+							return null;
+						
 						if (e.isDisplayed())
 							return e;
+						
 					} catch (StaleElementReferenceException exception) {
 						// Probably want to log when this happens
 						elementIsVisible(delegate);
@@ -1117,5 +1134,4 @@ public abstract class Element implements IElement {
 				}
 			};
 	}
-
 }
