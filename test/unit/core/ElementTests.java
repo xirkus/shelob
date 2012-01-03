@@ -864,7 +864,7 @@ public class ElementTests {
 		
 		assertThat(box.toString(), is(new StringBuilder()
 									      .append("Parent Page : ")
-									      .append(PAGE_NAME)
+									      .append(parentPage.getClass().getCanonicalName())
 									      .append(" Element : ")
 									      .append(box.getClass().getName())
 									      .append(" LookUp : ")
@@ -941,7 +941,7 @@ public class ElementTests {
 		
 		assertThat(check.toString(), is(new StringBuilder()
 	      									.append("Parent Page : ")
-	      									.append(PAGE_NAME)
+	      									.append(parentPage.getClass().getCanonicalName())
 	      									.append(" Element : ")
 	      									.append(check.getClass().getName())
 	      									.append(" LookUp : ")
@@ -1024,7 +1024,7 @@ public class ElementTests {
 		
 		assertThat(radio.toString(), is(new StringBuilder()
 											.append("Parent Page : ")
-											.append(PAGE_NAME)
+											.append(parentPage.getClass().getCanonicalName())
 											.append(" Element : ")
 											.append(radio.getClass().getName())
 											.append(" LookUp : ")
@@ -1107,7 +1107,7 @@ public class ElementTests {
 		
 		assertThat(cell.toString(), is(new StringBuilder()
 										   .append("Parent Page : ")
-										   .append(PAGE_NAME)
+										   .append(parentPage.getClass().getCanonicalName())
 										   .append(" Element : ")
 										   .append(cell.getClass().getName())
 										   .append(" LookUp : ")
@@ -1170,7 +1170,7 @@ public class ElementTests {
 		
 		assertThat(button.toString(), is(new StringBuilder()
 											.append("Parent Page : ")
-											.append(PAGE_NAME)
+											.append(parentPage.getClass().getCanonicalName())
 											.append(" Element : ")
 											.append(button.getClass().getName())
 											.append(" LookUp : ")
@@ -1248,7 +1248,7 @@ public class ElementTests {
 		
 		assertThat(control.toString(), is(new StringBuilder()
 											  .append("Parent Page : ")
-											  .append(PAGE_NAME)
+											  .append(parentPage.getClass().getCanonicalName())
 											  .append(" Element : ")
 											  .append(control.getClass().getName())
 											  .append(" LookUp : ")
@@ -1308,7 +1308,7 @@ public class ElementTests {
 		
 		assertThat(control.toString(), is(new StringBuilder()
 											  .append("Parent Page : ")
-											  .append(PAGE_NAME)
+											  .append(parentPage.getClass().getCanonicalName())
 											  .append(" Element : ")
 											  .append(control.getClass().getName())
 											  .append(" LookUp : ")
@@ -1521,7 +1521,7 @@ public class ElementTests {
 		
 		assertThat(control.toString(), is(new StringBuilder()
 											  .append("Parent Page : ")
-											  .append(PAGE_NAME)
+											  .append(parentPage.getClass().getCanonicalName())
 											  .append(" Element : ")
 											  .append(control.getClass().getName())
 											  .append(" LookUp : ")
