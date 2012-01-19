@@ -723,4 +723,12 @@ public final class NonExistentElement implements WebElement, IElementCore, IWhen
 	public Dimension getSizeWhenVisible(int waitTimeInSeconds) {
 		throw new NonExistentWebElementException("Attempt to call getSizeWhenVisible on a WebElement that cannot be found" + caller.toString());
 	}
+
+	public <T extends IPage> T getLink() {
+		throw new NonExistentWebElementException("Attempt to call getLink on a WebElement that cannot be found" + caller.toString());
+	}
+
+	public <T extends IPage> T getLink(Class<T> type) {
+		throw new NonExistentWebElementException("Attempt to call getLink on a WebElement that cannot be found" + caller.toString());
+	}
 }

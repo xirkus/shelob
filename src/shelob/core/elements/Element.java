@@ -614,6 +614,15 @@ public abstract class Element implements IElement {
 		return type.cast(link);
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T extends IPage> T getLink(){
+		return (T) link;
+	}
+	
+	public <T extends IPage> T getLink(Class<T> type) {
+		return type.cast(link);
+	}
+	
 	private void goToLinkImpl() { // $codepro.audit.disable methodJavadoc
 
 		if (link == null)

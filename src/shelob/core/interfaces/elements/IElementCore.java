@@ -142,6 +142,10 @@ public interface IElementCore extends IWaitable {
 	 */
 	boolean hasLink();
 	
+	
+	<T extends IPage> T getLink();
+	
+	<T extends IPage> T getLink(Class<T> type);
 	/** 
 	 * NOTE : helper method to mark the locator as an xpath expression
 	 * 

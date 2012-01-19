@@ -645,6 +645,16 @@ public class ElementTests {
 		nullObject.isDisplayedWhenVisible();
 	}
 	
+	@Test(expected = NonExistentWebElementException.class)
+	public void getLinkNonExistentElement(){
+		nullObject.getLink();
+	}
+	
+	@Test(expected = NonExistentWebElementException.class)
+	public void getLinkWithClassNonExistentElement(){
+		nullObject.getLink(IPage.class);
+	}
+	
 	@Test
 	public void toStringNonExistentElement(){
 		assertThat(nullObject.toString(), is("Non-existent Element."));
@@ -754,6 +764,21 @@ public class ElementTests {
 		} catch (NullPointerException e){
 			assertThat(e.getMessage().contains("The linkTo for this object was not set through it's Builder."), is(true));
 		}
+		
+	}
+	
+	@Test
+	public void getLink() {
+		
+		ApplicationParameters parameters = mock(ApplicationParameters.class);
+		
+		TestPage linkedPage = new TestPage(parameters);
+		
+		final ILabel anyElementWithLink = new Label.Builder(parentPage, LOOKUP, LOCATOR)
+		   .linksTo(linkedPage)
+		   .build();
+		
+		assertThat(anyElementWithLink.getLink().equals(linkedPage), is(true));
 		
 	}
 	
