@@ -21,38 +21,35 @@
 	EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-package core;
+package core.examples.composite.interfaces;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import shelob.core.interfaces.elements.IElement;
+import shelob.core.interfaces.elements.IIsComposite;
+import core.examples.element.interfaces.IDropdown;
+import core.examples.element.interfaces.ITextBox;
 
-import core.browsers.ChromeTests;
 
-import core.browsers.FirefoxTests;
-import core.browsers.IETests;
+/**
+ * @author melllaguno
+ * @version $Revision : 1.0 $
+ * 
+ * The Composite YearMonthDayPicker interface
+ */
+public interface IYearMonthDayPicker extends IElement, IIsComposite {
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ 
-	ChromeTests.class,
-	FirefoxTests.class,
-	IETests.class,
-	ApplicationParameterTests.class,
-	ApplicationURLTests.class,
-	ElementCollectionTests.class,
-	ElementTests.class,
-	PageTests.class,
-	UserTests.class,
-	YearMonthDayPickerTests.class,
-})
-
-public class All {
-
-	@BeforeClass
-	public static void runBeforeSuite() {}
+	/**
+	 * @return the month Dropdown element
+	 */
+	IDropdown month();
+		
+	/**
+	 * @return the day Dropdown element
+	 */
+	IDropdown day();
 	
-	@AfterClass
-	public static void runAfterSuite() {}
+	/**
+	 * @return the TextBox representing the year
+	 */
+	ITextBox year();
 	
 }

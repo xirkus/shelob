@@ -21,38 +21,14 @@
 	EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-package core;
+package core.examples.element.interfaces;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import shelob.core.interfaces.elements.IElement;
 
-import core.browsers.ChromeTests;
-
-import core.browsers.FirefoxTests;
-import core.browsers.IETests;
-
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ 
-	ChromeTests.class,
-	FirefoxTests.class,
-	IETests.class,
-	ApplicationParameterTests.class,
-	ApplicationURLTests.class,
-	ElementCollectionTests.class,
-	ElementTests.class,
-	PageTests.class,
-	UserTests.class,
-	YearMonthDayPickerTests.class,
-})
-
-public class All {
-
-	@BeforeClass
-	public static void runBeforeSuite() {}
-	
-	@AfterClass
-	public static void runAfterSuite() {}
-	
-}
+/**
+ * @author melllaguno
+ * @version $Revision: 1.0 $
+ *
+ * IGridCell
+ */
+public interface IGridCell extends IElement {}

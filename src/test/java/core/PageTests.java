@@ -22,7 +22,7 @@
 **/
 
 // $codepro.audit.disable
-package unit.core;
+package core;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -48,8 +48,8 @@ import shelob.core.page.Page;
 import shelob.core.page.StandardNavigationPage;
 import shelob.core.page.SubPage;
 
-import examples.element.Label;
-import examples.element.interfaces.ILabel;
+import core.examples.element.Label;
+import core.examples.element.interfaces.ILabel;
 
 
 public class PageTests {

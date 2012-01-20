@@ -22,7 +22,7 @@
 **/
 
 // $codepro.audit.disable typeJavadoc, com.instantiations.assist.eclipse.analysis.audit.rule.effectivejava.alwaysOverridetoString.alwaysOverrideToString, fieldJavadoc, methodJavadoc
-package unit.core;
+package core;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -37,8 +37,8 @@ import org.mockito.MockitoAnnotations;
 import shelob.core.ApplicationParameters;
 import shelob.core.interfaces.page.IPage;
 
-import examples.composite.YearMonthDayPicker;
-import examples.composite.interfaces.IYearMonthDayPicker;
+import core.examples.composite.YearMonthDayPicker;
+import core.examples.composite.interfaces.IYearMonthDayPicker;
 
 public class YearMonthDayPickerTests {
 

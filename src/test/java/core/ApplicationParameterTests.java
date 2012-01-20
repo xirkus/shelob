@@ -23,7 +23,7 @@
 
 // $codepro.audit.disable fieldJavadoc, typeJavadoc, methodJavadoc, com.instantiations.assist.eclipse.analysis.audit.rule.effectivejava.alwaysOverridetoString.alwaysOverrideToString
 
-package unit.core;
+package core;
 
 import org.junit.*;
 import org.openqa.selenium.JavascriptExecutor;

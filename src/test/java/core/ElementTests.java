@@ -22,7 +22,7 @@
 **/
 
 // $codepro.audit.disable
-package unit.core;
+package core;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -63,23 +63,23 @@ import shelob.core.page.GenericReportWindow;
 import shelob.core.page.Page;
 import shelob.core.page.StandardNavigationPage;
 
-import examples.element.Button;
-import examples.element.Button.Type;
-import examples.element.CheckBox;
-import examples.element.Dropdown;
-import examples.element.GridCell;
-import examples.element.Image;
-import examples.element.Label;
-import examples.element.RadioButton;
-import examples.element.TextBox;
-import examples.element.interfaces.IButton;
-import examples.element.interfaces.ICheckBox;
-import examples.element.interfaces.IDropdown;
-import examples.element.interfaces.IGridCell;
-import examples.element.interfaces.IImage;
-import examples.element.interfaces.ILabel;
-import examples.element.interfaces.IRadioButton;
-import examples.element.interfaces.ITextBox;
+import core.examples.element.Button;
+import core.examples.element.Button.Type;
+import core.examples.element.CheckBox;
+import core.examples.element.Dropdown;
+import core.examples.element.GridCell;
+import core.examples.element.Image;
+import core.examples.element.Label;
+import core.examples.element.RadioButton;
+import core.examples.element.TextBox;
+import core.examples.element.interfaces.IButton;
+import core.examples.element.interfaces.ICheckBox;
+import core.examples.element.interfaces.IDropdown;
+import core.examples.element.interfaces.IGridCell;
+import core.examples.element.interfaces.IImage;
+import core.examples.element.interfaces.ILabel;
+import core.examples.element.interfaces.IRadioButton;
+import core.examples.element.interfaces.ITextBox;
 
 public class ElementTests {
 

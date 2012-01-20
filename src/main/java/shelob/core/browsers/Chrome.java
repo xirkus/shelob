@@ -51,6 +51,7 @@ public enum Chrome {
 	/**
 	 * @return the ChromeDriver instance
 	 */
+	@SuppressWarnings("deprecation")
 	static public RemoteWebDriver getDriver() {
 		return new ChromeDriver(getDefaultCapabilities());
 	}

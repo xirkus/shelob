@@ -21,7 +21,7 @@
 	EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-package unit.core.browsers;
+package core.browsers;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;

@@ -22,7 +22,7 @@
 **/
 
 // $codepro.audit.disable fieldJavadoc, typeJavadoc, methodJavadoc, com.instantiations.assist.eclipse.analysis.audit.rule.effectivejava.alwaysOverridetoString.alwaysOverrideToString
-package unit.core;
+package core;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -47,7 +47,7 @@ import shelob.core.interfaces.elements.IElement;
 import shelob.core.interfaces.elements.IElementCollection;
 import shelob.core.interfaces.page.IPage;
 
-import examples.element.Button;
+import core.examples.element.Button;
 
 
 public class ElementCollectionTests {

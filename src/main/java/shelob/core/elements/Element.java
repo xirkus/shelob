@@ -758,7 +758,7 @@ public abstract class Element implements IElement {
 	 */
 	public Wait<WebDriver> getWaitHelper(long waitTimeInSeconds) {
 		return new WebDriverWait(this.getParentPage().getDriver(),
-				waitTimeInSeconds);
+				waitTimeInSeconds).ignoring(StaleElementReferenceException.class);
 	}
 
 	/**
