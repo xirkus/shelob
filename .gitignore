@@ -44,3 +44,9 @@ bin/
 ehthumbs.db
 Icon?
 Thumbs.db
+
+# Eclipse generated files #
+###########################
+.classpath
+.project
+.settings/
