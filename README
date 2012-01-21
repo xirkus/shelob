@@ -83,6 +83,5 @@ By using namespace to structure Page hierarchies, we can accomodate Page objects
 ==== Re-editable and Reusable ====
 Configuration becomes a process of binding the application to a test harness which is decoupled from executable test cases. Application changes at either the Element or Page level can be localized. This minimizes the impact on test cases which depend on these abstractions. In addition, duplication in Pages and Elements is substantially reduced resulting in a test harness that can evolve with the changing requirements of the Application Under Test (AUT).
 
-TODO : Mavenize the dependencies.
 TODO : Update examples to point to a live site.
 TODO : Include usage documentation.
